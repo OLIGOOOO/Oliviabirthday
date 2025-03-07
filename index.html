@@ -15,6 +15,8 @@
             background: linear-gradient(45deg, #ff6b81, #ff4757);
             font-family: 'Pacifico', cursive, sans-serif;
             overflow: hidden;
+            position: relative;
+            flex-direction: column;
         }
         .card-container {
             position: relative;
@@ -62,40 +64,49 @@
             flex-direction: column;
             padding: 15px;
             font-size: 20px;
+            position: relative;
         }
         .inside h2 {
             font-size: 28px;
+            text-shadow: 0 0 8px yellow;
         }
         .inside p {
             font-size: 24px;
         }
-        .floating-elements {
+        .sparkles, .falling-stars {
             position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
+            top: 0;
+            left: 0;
             overflow: hidden;
+            pointer-events: none;
         }
-        .floating-elements div {
+        .sparkle, .falling-star {
             position: absolute;
-            width: 20px;
-            height: 20px;
+            width: 6px;
+            height: 6px;
+            background: white;
+            box-shadow: 0 0 8px white;
             border-radius: 50%;
-            opacity: 0;
-            animation: floatUp 2s ease-out forwards;
+            opacity: 0.8;
         }
-        .flowers { background: pink; }
-        .hearts { background: red; width: 25px; height: 25px; }
-        .stars { background: yellow; width: 20px; height: 20px; }
-        @keyframes floatUp {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-300px) scale(2); opacity: 0; }
+        @keyframes sparkleAnimation {
+            0% { transform: scale(0.5); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.5); opacity: 0.5; }
+        }
+        @keyframes fall {
+            0% { transform: translateY(-100px); opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+        .falling-star {
+            animation: fall 2s linear forwards;
         }
     </style>
 </head>
 <body>
+    <div class="sparkles" id="sparkles"></div>
     <div class="card-container">
         <div class="card" id="birthdayCard">
             <div class="front" onclick="openCard()">
@@ -108,28 +119,37 @@
                 <p>You are a gift to this world and to my life. You made even the starless sky shine ✨! I hope this year brings you endless love, joy, and dreams coming true. You deserve the universe and more! 💫</p>
             </div>
         </div>
-        <div class="floating-elements" id="floatingElements"></div>
     </div>
-
+    <div class="falling-stars" id="fallingStars"></div>
     <script>
         function openCard() {
             document.getElementById('birthdayCard').classList.add('open');
-            createFloatingElements('flowers', 30);
-            createFloatingElements('hearts', 20);
-            createFloatingElements('stars', 15);
+            createFallingStars();
         }
-        function createFloatingElements(className, count) {
-            const container = document.getElementById('floatingElements');
-            const containerRect = container.getBoundingClientRect();
-            for (let i = 0; i < count; i++) {
-                let element = document.createElement('div');
-                element.classList.add(className);
-                element.style.left = Math.random() * containerRect.width + 'px';
-                element.style.top = containerRect.height + 'px';
-                container.appendChild(element);
-                setTimeout(() => element.remove(), 2000);
+        function createSparkles() {
+            const container = document.getElementById('sparkles');
+            for (let i = 0; i < 50; i++) {
+                let sparkle = document.createElement("div");
+                sparkle.classList.add("sparkle");
+                sparkle.style.left = Math.random() * 100 + "%";
+                sparkle.style.top = Math.random() * 100 + "%";
+                sparkle.style.animation = "sparkleAnimation 3s infinite ease-in-out";
+                sparkle.style.animationDelay = Math.random() * 3 + "s";
+                container.appendChild(sparkle);
             }
         }
+        function createFallingStars() {
+            const container = document.getElementById('fallingStars');
+            for (let i = 0; i < 20; i++) {
+                let star = document.createElement("div");
+                star.classList.add("falling-star");
+                star.style.left = Math.random() * 100 + "%";
+                star.style.animationDuration = (1 + Math.random()) + "s";
+                container.appendChild(star);
+                setTimeout(() => star.remove(), 2000);
+            }
+        }
+        createSparkles();
     </script>
 </body>
 </html>
